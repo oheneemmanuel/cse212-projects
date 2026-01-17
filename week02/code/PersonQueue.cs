@@ -13,11 +13,14 @@ public class PersonQueue
     /// <param name="person">The person to add</param>
     public void Enqueue(Person person)
     {
-        _queue.Insert(0, person);
+        // FIX: Change _queue.Insert(0, person) to _queue.Add(person)
+        // This ensures the person goes to the END of the list.
+        _queue.Add(person);
     }
 
     public Person Dequeue()
     {
+        // this statement is correct and stays the same
         var person = _queue[0];
         _queue.RemoveAt(0);
         return person;
