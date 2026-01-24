@@ -22,7 +22,27 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // create a hash set to store seen words
+        var seen = new HashSet<string>();
+        var pairs = new List<string>();
+        foreach (var word in words)
+        {
+            if (word[0] == word[1])
+            {
+                continue; // Skip words with identical letters
+            }
+            // create the reversed version of the word
+            string reversed = $"{word[1]}{word[0]}";
+            if (seen.Contains(reversed))
+            {
+                pairs.Add($"{reversed} & {word}");
+            }
+            else
+            {
+                seen.Add(word);
+            }
+        }
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -42,7 +62,19 @@ public static class SetsAndMaps
         foreach (var line in File.ReadLines(filename))
         {
             var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            if (fields.Length >= 4)
+            {
+                string degree = fields[3].Trim();
+
+                if (degrees.ContainsKey(degree))
+                {
+                    degrees[degree]++;
+                }
+                else
+                {
+                    degrees[degree] = 1;
+                }
+            }
         }
 
         return degrees;
@@ -67,7 +99,58 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // 1. Clean the words: Lowercase and remove spaces
+        string clean1 = word1.ToLower().Replace(" ", "");
+    string clean2 = word2.ToLower().Replace(" ", "");
+
+        // 2. If lengths differ, they cannot be anagrams
+        if (clean1.Length != clean2.Length)
+        {
+            return false;
+        }
+
+        // 3. Count letter frequencies for the first word
+        var letterCount = new Dictionary<char, int>();
+        foreach (char c in clean1)
+        {
+            if (letterCount.ContainsKey(c))
+            {
+                letterCount[c]++;
+            }
+            else
+            {
+                letterCount[c] = 1;
+            }
+        }
+
+        // 4. Decrease counts based on the second word
+        foreach (char c in clean2)
+        {
+            if (letterCount.ContainsKey(c))
+            {
+                letterCount[c]--;
+                if (letterCount[c] < 0)
+                {
+                    return false; // More occurrences in word2 than word1
+                }
+            }
+            else
+            {
+                return false; // Letter in word2 not found in word1
+            }
+        }
+
+        // 5. Check if all counts are zero
+        foreach (var count in letterCount.Values)
+        {
+            if (count != 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+
     }
 
     /// <summary>
